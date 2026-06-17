@@ -1,5 +1,6 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getGuestById, updateGuestRsvp } from '@/lib/guests-service'
+import { sendRsvpNotification } from '@/lib/email-service'
 import type { RsvpPayload } from '@/lib/types/guest'
 
 export async function GET(request: Request) {
@@ -8,7 +9,7 @@ export async function GET(request: Request) {
   if (!id) {
     return NextResponse.json({ error: 'El parametro id es requerido.' }, { status: 400 })
   }
-  const guest = getGuestById(id)
+  const guest = await getGuestById(id)
   if (!guest) {
     return NextResponse.json({ error: 'Invitado no encontrado.' }, { status: 404 })
   }
@@ -31,18 +32,24 @@ export async function POST(request: Request) {
   if (typeof body.attendees !== 'number') {
     return NextResponse.json({ error: 'El campo attendees es requerido.' }, { status: 400 })
   }
-  const guest = getGuestById(body.id)
+  const guest = await getGuestById(body.id)
   if (!guest) {
     return NextResponse.json({ error: 'Invitado no encontrado.' }, { status: 404 })
   }
   try {
-    const updatedGuest = updateGuestRsvp(body.id, {
+    const updatedGuest = await updateGuestRsvp(body.id, {
       id: body.id,
       attending: body.attending,
       attendees: body.attendees,
       attendeeNames: body.attendeeNames,
       songs: body.songs,
     })
+
+    // Send email notification in the background
+    sendRsvpNotification(updatedGuest).catch((err) => {
+      console.error('Failed to send email notification:', err)
+    })
+
     return NextResponse.json({ guest: updatedGuest })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'No se pudo registrar la respuesta.'

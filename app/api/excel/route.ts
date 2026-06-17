@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx'
 import { getAllGuests } from '@/lib/guests-service'
 
 export async function GET() {
-  const guests = getAllGuests()
+  const guests = await getAllGuests()
 
   const rows = guests.map((guest) => ({
     ID: guest.id,

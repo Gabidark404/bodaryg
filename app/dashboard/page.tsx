@@ -54,7 +54,7 @@ function Badge({ status }: { status: 'confirmed' | 'declined' | 'pending' }) {
 }
 
 export default async function DashboardPage() {
-  const guests = getAllGuests()
+  const guests = await getAllGuests()
 
   const total = guests.length
   const confirmed = guests.filter((g) => g.confirmed && g.attending).length

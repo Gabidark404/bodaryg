@@ -16,7 +16,7 @@ export default async function Home({
   searchParams: Promise<{ id?: string }>
 }) {
   const { id } = await searchParams
-  const initialGuest = id ? getGuestById(id) : null
+  const initialGuest = id ? await getGuestById(id) : null
 
   return (
     <Suspense fallback={<InvitationSkeleton />}>
