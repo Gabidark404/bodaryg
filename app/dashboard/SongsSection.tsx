@@ -22,6 +22,7 @@ export function SongsSection({ songs }: SongsSectionProps) {
   const [spotifyToken, setSpotifyToken] = useState('')
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false)
   const [playlistResult, setPlaylistResult] = useState<{ url?: string; error?: string } | null>(null)
+  const [isSpotifyOpen, setIsSpotifyOpen] = useState(false)
 
   const handleCopy = () => {
     const text = songs.map((s, i) => `${i + 1}. ${s.title}`).join('\n')
@@ -94,12 +95,23 @@ export function SongsSection({ songs }: SongsSectionProps) {
         padding: '24px',
         border: '1px solid #1db954',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-          <div style={{ background: '#1db954', color: '#fff', borderRadius: '50%', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-            S
+        <div 
+          onClick={() => setIsSpotifyOpen(!isSpotifyOpen)}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ background: '#1db954', color: '#fff', borderRadius: '50%', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+              S
+            </div>
+            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: '#111827' }}>Integración con Spotify</h3>
           </div>
-          <h3 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: '#111827' }}>Integración con Spotify</h3>
+          <button style={{ background: 'none', border: 'none', fontSize: 18, color: '#6b7280', cursor: 'pointer' }}>
+            {isSpotifyOpen ? '▲' : '▼'}
+          </button>
         </div>
+        
+        {isSpotifyOpen && (
+          <div style={{ marginTop: 16 }}>
         <p style={{ margin: '0 0 16px', fontSize: 14, color: '#6b7280' }}>
           Ingresa un <a href="https://developer.spotify.com/console/post-playlists/" target="_blank" rel="noopener noreferrer" style={{ color: '#1db954' }}>Access Token temporal</a> para crear automáticamente la playlist <strong>🌸 Boda R&G - Playlist de Invitados</strong> en tu cuenta.
         </p>
@@ -156,6 +168,8 @@ export function SongsSection({ songs }: SongsSectionProps) {
             <a href={playlistResult.url} target="_blank" rel="noopener noreferrer" style={{ background: '#059669', color: '#fff', padding: '6px 12px', borderRadius: 6, textDecoration: 'none', fontWeight: 600 }}>
               Abrir en Spotify
             </a>
+          </div>
+        )}
           </div>
         )}
       </div>

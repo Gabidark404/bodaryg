@@ -192,37 +192,41 @@ export default async function DashboardPage() {
                     </td>
                     <td style={{ padding: '12px 16px', color: '#374151', maxWidth: 200 }}>
                       {guest.attendeeNames && guest.attendeeNames.length > 0 ? (
-                        <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
-                          {guest.attendeeNames.map((n, idx) => (
-                            <li key={idx}>{n}</li>
-                          ))}
-                        </ul>
+                        <div style={{ maxHeight: 100, overflowY: 'auto', paddingRight: 4 }}>
+                          <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
+                            {guest.attendeeNames.map((n, idx) => (
+                              <li key={idx}>{n}</li>
+                            ))}
+                          </ul>
+                        </div>
                       ) : (
                         <span style={{ color: '#9ca3af' }}>—</span>
                       )}
                     </td>
                     <td style={{ padding: '12px 16px', color: '#374151', maxWidth: 220 }}>
                       {guest.songs && guest.songs.length > 0 ? (
-                        <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
-                          {guest.songs.map((s, idx) => (
-                            <li key={idx}>
-                              {s.title}
-                              {s.url && (
-                                <>
-                                  {' '}
-                                  <a
-                                    href={s.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{ color: '#d4afb4', fontSize: 11 }}
-                                  >
-                                    ♫
-                                  </a>
-                                </>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
+                        <div style={{ maxHeight: 120, overflowY: 'auto', paddingRight: 4 }}>
+                          <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
+                            {guest.songs.map((s, idx) => (
+                              <li key={idx}>
+                                {s.title}
+                                {s.url && (
+                                  <>
+                                    {' '}
+                                    <a
+                                      href={s.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{ color: '#d4afb4', fontSize: 11 }}
+                                    >
+                                      ♫
+                                    </a>
+                                  </>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       ) : (
                         <span style={{ color: '#9ca3af' }}>—</span>
                       )}
