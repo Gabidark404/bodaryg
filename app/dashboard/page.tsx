@@ -1,4 +1,5 @@
 import { getAllGuests } from '@/lib/guests-service'
+import { SongsSection } from './SongsSection'
 
 export const dynamic = 'force-dynamic'
 
@@ -62,6 +63,15 @@ export default async function DashboardPage() {
   const pending = guests.filter((g) => !g.confirmed).length
   const totalAttendees = guests.reduce((sum, g) => sum + (g.attendees ?? 0), 0)
 
+  // Build consolidated songs list with guest name
+  const allSongs = guests.flatMap((g) =>
+    (g.songs ?? []).filter(s => s.title.trim().length > 0).map(s => ({
+      title: s.title,
+      url: s.url,
+      guestName: g.name,
+    }))
+  )
+
   return (
     <div
       style={{
@@ -91,7 +101,11 @@ export default async function DashboardPage() {
         <StatCard label="Asistentes" value={totalAttendees} color="#60a5fa" />
         <StatCard label="Pendientes" value={pending} color="#fbbf24" />
         <StatCard label="Declinaron" value={declined} color="#f87171" />
+        <StatCard label="Canciones" value={allSongs.length} color="#a78bfa" />
       </div>
+
+      {/* Songs Section */}
+      <SongsSection songs={allSongs} />
 
       {/* Actions */}
       <div style={{ marginBottom: 24, display: 'flex', gap: 12 }}>
