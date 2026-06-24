@@ -1,5 +1,4 @@
 import { getAllGuests } from '@/lib/guests-service'
-import { SongsSection } from './SongsSection'
 
 export const dynamic = 'force-dynamic'
 
@@ -63,34 +62,15 @@ export default async function DashboardPage() {
   const pending = guests.filter((g) => !g.confirmed).length
   const totalAttendees = guests.reduce((sum, g) => sum + (g.attendees ?? 0), 0)
 
-  // Build consolidated songs list with guest name
-  const allSongs = guests.flatMap((g) =>
-    (g.songs ?? []).filter(s => s.title.trim().length > 0).map(s => ({
-      title: s.title,
-      url: s.url,
-      guestName: g.name,
-    }))
-  )
-
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        fontFamily:
-          'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-        background: '#f8fafc',
-        padding: '32px 24px',
-        maxWidth: 1100,
-        margin: '0 auto',
-      }}
-    >
+    <div>
       {/* Header */}
       <div style={{ marginBottom: 32 }}>
-        <h1 style={{ margin: 0, fontSize: 28, fontWeight: 700, color: '#111827' }}>
-          🌸 Dashboard — Rainier &amp; Guadalupe
-        </h1>
+        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#111827' }}>
+          Vista General
+        </h2>
         <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: 14 }}>
-          Panel de administración • 15 de agosto de 2026
+          Métricas y lista de invitados
         </p>
       </div>
 
@@ -101,7 +81,6 @@ export default async function DashboardPage() {
         <StatCard label="Asistentes" value={totalAttendees} color="#60a5fa" />
         <StatCard label="Pendientes" value={pending} color="#fbbf24" />
         <StatCard label="Declinaron" value={declined} color="#f87171" />
-        <StatCard label="Canciones" value={allSongs.length} color="#a78bfa" />
       </div>
 
       {/* Actions */}
@@ -256,8 +235,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div style={{ marginTop: 32 }}>
-        <SongsSection songs={allSongs} />
       </div>
 
       <p style={{ marginTop: 24, fontSize: 12, color: '#9ca3af', textAlign: 'center' }}>

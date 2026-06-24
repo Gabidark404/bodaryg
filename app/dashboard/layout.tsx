@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { DashboardSidebar } from '@/components/DashboardSidebar'
 
 export const metadata: Metadata = {
   title: 'Dashboard — Rainier & Guadalupe',
@@ -12,10 +10,8 @@ export const metadata: Metadata = {
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es">
-      <body className={inter.className} style={{ margin: 0, background: '#f8fafc' }}>
-        {children}
-      </body>
-    </html>
+    <DashboardSidebar>
+      {children}
+    </DashboardSidebar>
   )
 }
