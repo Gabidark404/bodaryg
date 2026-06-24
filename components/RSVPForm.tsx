@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -77,6 +77,78 @@ function buildDefaultNames(
 
 // ─── Confirmed (YES) ─────────────────────────────────────────────────────────
 function ConfirmedYes({ guest }: { guest: Guest }) {
+  const [songs, setSongs] = useState<{ title: string }[]>(guest.songs?.map(s => ({ title: s.title })) ?? []);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    // Initialize songs from guest prop when it changes
+    setSongs(guest.songs?.map(s => ({ title: s.title })) ?? []);
+  }, [guest]);
+
+  const addSong = useCallback(() => {
+    setSongs(prev => [...prev, { title: '' }]);
+  }, []);
+
+  const removeSong = useCallback((index: number) => {
+    setSongs(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const updateSongTitle = useCallback((index: number, title: string) => {
+    setSongs(prev => {
+      const newSongs = [...prev];
+      newSongs[index] = { title };
+      return newSongs;
+    });
+  }, []);
+
+  const saveSongs = useCallback(async () => {
+    if (isSaving) return;
+
+    setIsSaving(true);
+    setSaveStatus('saving');
+
+    try {
+      const res = await fetch('/api/invitados', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: guest.id,
+          attending: guest.attending ?? false,
+          attendees: guest.attendees ?? 0,
+          attendeeNames: guest.attendeeNames ?? [],
+          songs: songs.map(s => ({ title: s.title })).filter(s => s.title.length > 0)
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Error al guardar las canciones');
+      }
+
+      const data = await res.json();
+      // Update local guest state with latest from server
+      setSongs(data.guest.songs?.map(s => ({ title: s.title })) ?? []);
+      setSaveStatus('success');
+
+      // Reset status after 2 seconds
+      setTimeout(() => {
+        setSaveStatus('idle');
+      }, 2000);
+    } catch (err) {
+      setSaveStatus('error');
+      console.error('Failed to save songs:', err);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [guest.attending, guest.attendees, guest.attendeeNames, guest.id, songs]);
+
+  // Auto-save when songs change (optional - could rely on manual save button)
+  // useEffect(() => {
+  //   if (songs.length > 0) {
+  //     saveSongs();
+  //   }
+  // }, [songs, saveSongs]);
+
   return (
     <div className="confirmed-yes">
       <div className="check-wrap">
@@ -108,6 +180,103 @@ function ConfirmedYes({ guest }: { guest: Guest }) {
           </ul>
         </div>
       )}
+
+      {/* Sección de gestión de canciones */}
+      <div className="field-block">
+        <span className="field-label">Tu lista de canciones</span>
+        <p style={{ fontSize: '.78rem', color: 'var(--muted)', marginBottom: 12 }}>
+          ¡Que no falte tu canción favorita! Puedes seguir añadiendo canciones a nuestra lista de reproducción.
+        </p>
+
+        {songs.length > 0 ? (
+          songs.map((song, index) => (
+            <div key={index} className="song-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--border)', flexShrink: 0 }}>
+                <path d="M9 18V5l12-2v13"/>
+                <circle cx="6" cy="18" r="3"/>
+                <circle cx="18" cy="16" r="3"/>
+              </svg>
+              <input
+                type="text"
+                placeholder="Ej. Fly Me to the Moon – Frank Sinatra"
+                value={song.title}
+                onChange={(e) => updateSongTitle(index, e.target.value)}
+              />
+              {songs.length > 1 && (
+                <button
+                  type="button"
+                  className="del-btn"
+                  onClick={() => removeSong(index)}
+                  aria-label="Eliminar canción"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                    <path d="M9 6V4h6v2"/>
+                  </svg>
+                </button>
+              )}
+            </div>
+          ))
+        ) : (
+          <p style={{ fontSize: '.87rem', color: 'var(--muted)', fontStyle: 'italic', textAlign: 'center', padding: '20px 0' }}>
+            Aún no has añadido ninguna canción. ¡Haz clic en "Añadir otra canción" para comenzar!
+          </p>
+        )}
+
+        <button
+          type="button"
+          className={`add-song${isSaving ? ' add-song-disabled' : ''}`}
+          onClick={!isSaving ? addSong : undefined}
+          disabled={isSaving}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Añadir otra canción
+        </button>
+
+        {saveStatus !== 'idle' && (
+          <p style={{
+            marginTop: 12,
+            padding: '8px 12px',
+            borderRadius: 8,
+            fontSize: '.75rem',
+            textAlign: 'center',
+            backgroundColor: saveStatus === 'success'
+              ? 'rgba(128,150,113,0.1)'
+              : saveStatus === 'error'
+                ? 'rgba(220,38,38,0.1)'
+                : 'rgba(0,0,0,0.03)',
+            color: saveStatus === 'success'
+              ? 'var(--euca)'
+              : saveStatus === 'error'
+                ? '#dc2626'
+                : 'var(--muted)',
+            border: `1px solid ${saveStatus === 'success'
+              ? 'rgba(128,150,113,0.3)'
+              : saveStatus === 'error'
+                ? 'rgba(220,38,38,0.3)'
+                : 'rgba(0,0,0,0.1)'}`
+          }}>
+            {saveStatus === 'saving' && 'Guardando cambios...'}
+            {saveStatus === 'success' && '¡Canciones guardadas!'}
+            {saveStatus === 'error' && 'Error al guardar. Inténtalo de nuevo.'}
+          </p>
+        )}
+
+        <button
+          type="button"
+          onClick={saveSongs}
+          disabled={isSaving || (songs.length > 0 && songs.every(s => !s.title.trim()))}
+          className="submit-btn"
+        >
+          {isSaving ? 'Guardando...' : 'Guardar canciones'}
+        </button>
+      </div>
+
       <p style={{ fontSize: '.75rem', color: 'var(--muted)', marginTop: 12 }}>
         Puedes descargar tu pase digital más abajo.
       </p>

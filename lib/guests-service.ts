@@ -113,9 +113,9 @@ export async function updateGuestRsvp(id: string, payload: RsvpPayload): Promise
   const validationError = validateRsvpPayload(guest, payload)
   if (validationError) { throw new Error(validationError) }
   
-  const songs = payload.songs?.filter((song) => song.title.trim().length > 0) ?? []
+  const songs = payload.songs?.filter((song) => song.title.trim().length > 0).map((song) => ({ ...song, title: song.title })) ?? []
   const attendeeNames = payload.attending
-    ? (payload.attendeeNames ?? []).map((n) => n.trim()).filter(Boolean)
+    ? (payload.attendeeNames ?? []).filter((n) => n?.trim())
     : []
 
   const updateData = {

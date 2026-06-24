@@ -28,6 +28,7 @@
   { "id": "eider-santander", "name": "Eider Santander", "pases": 2 },
   { "id": "franki-roa", "name": "Franki Roa", "pases": 2 },
   { "id": "melissa-rodriguez", "name": "Melissa Rodriguez", "pases": 2 },
-  { "id": "christiam-hernandez", "name": "Christiam Hernández", "pases": 2 }
-  { "id": "alfredo-mari", "name": "Alfredo Marin", "pases": 2 }
+  { "id": "christiam-hernandez", "name": "Christiam Hernández", "pases": 2 },
+  { "id": "alfredo-marin", "name": "Alfredo Marín", "pases": 2 },
+  { "id": "maria-torres", "name": "María Torres", "pases": 1 }
 ]
