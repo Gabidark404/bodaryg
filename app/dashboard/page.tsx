@@ -104,9 +104,6 @@ export default async function DashboardPage() {
         <StatCard label="Canciones" value={allSongs.length} color="#a78bfa" />
       </div>
 
-      {/* Songs Section */}
-      <SongsSection songs={allSongs} />
-
       {/* Actions */}
       <div style={{ marginBottom: 24, display: 'flex', gap: 12 }}>
         <a
@@ -257,6 +254,10 @@ export default async function DashboardPage() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div style={{ marginTop: 32 }}>
+        <SongsSection songs={allSongs} />
       </div>
 
       <p style={{ marginTop: 24, fontSize: 12, color: '#9ca3af', textAlign: 'center' }}>
