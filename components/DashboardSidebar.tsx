@@ -159,8 +159,7 @@ export function DashboardSidebar({ children }: { children: React.ReactNode }) {
 
       {/* Main Content Area */}
       <div className="main-content" style={{ flex: 1 }}>
-        <div style={{
-          padding: '24px',
+        <div className="main-content-inner" style={{
           maxWidth: 1100,
           margin: '0 auto',
         }}>
@@ -176,11 +175,13 @@ export function DashboardSidebar({ children }: { children: React.ReactNode }) {
           .sidebar-backdrop { display: none !important; }
           .sidebar { transform: translateX(0) !important; }
           .main-content { margin-left: 260px; }
+          .main-content-inner { padding: 32px; }
         }
         @media (max-width: 768px) {
           .sidebar { transform: translateX(-100%); }
           .sidebar.open { transform: translateX(0); }
           .main-content { margin-top: 64px; }
+          .main-content-inner { padding: 16px; }
         }
       `}} />
     </div>

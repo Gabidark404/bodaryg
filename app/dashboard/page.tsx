@@ -141,7 +141,6 @@ export default async function DashboardPage() {
                   'Estado',
                   'Asistentes',
                   'Nombres',
-                  'Canciones',
                 ].map((h) => (
                   <th
                     key={h}
@@ -170,7 +169,8 @@ export default async function DashboardPage() {
                     key={guest.id}
                     style={{
                       borderBottom: '1px solid #f3f4f6',
-                      background: i % 2 === 0 ? '#fff' : '#fafafa',
+                      background: i % 2 === 0 ? '#ffffff' : '#fcfcfc',
+                      transition: 'background 0.2s',
                     }}
                   >
                     <td style={{ padding: '12px 16px' }}>
@@ -196,34 +196,6 @@ export default async function DashboardPage() {
                           <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
                             {guest.attendeeNames.map((n, idx) => (
                               <li key={idx}>{n}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : (
-                        <span style={{ color: '#9ca3af' }}>—</span>
-                      )}
-                    </td>
-                    <td style={{ padding: '12px 16px', color: '#374151', maxWidth: 220 }}>
-                      {guest.songs && guest.songs.length > 0 ? (
-                        <div style={{ maxHeight: 120, overflowY: 'auto', paddingRight: 4 }}>
-                          <ul style={{ margin: 0, padding: '0 0 0 16px' }}>
-                            {guest.songs.map((s, idx) => (
-                              <li key={idx}>
-                                {s.title}
-                                {s.url && (
-                                  <>
-                                    {' '}
-                                    <a
-                                      href={s.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      style={{ color: '#d4afb4', fontSize: 11 }}
-                                    >
-                                      ♫
-                                    </a>
-                                  </>
-                                )}
-                              </li>
                             ))}
                           </ul>
                         </div>
