@@ -40,12 +40,14 @@ function Badge({ status }: { status: 'confirmed' | 'declined' | 'pending' }) {
   return (
     <span
       style={{
+        display: 'inline-block',
         background: s.bg,
         color: s.color,
         borderRadius: 6,
         padding: '2px 10px',
         fontSize: 12,
         fontWeight: 600,
+        whiteSpace: 'nowrap',
       }}
     >
       {s.label}

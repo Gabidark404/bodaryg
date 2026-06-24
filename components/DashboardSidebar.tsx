@@ -14,7 +14,7 @@ export function DashboardSidebar({ children }: { children: React.ReactNode }) {
   ]
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: '#f8fafc' }}>
       {/* Mobile Topbar */}
       <div style={{
         display: 'flex',
