@@ -214,7 +214,7 @@ export default async function DashboardPage() {
       </div>
 
       <p style={{ marginTop: 24, fontSize: 12, color: '#9ca3af', textAlign: 'center' }}>
-        Última actualización: {new Date().toLocaleString('es-VE', { timeZone: 'America/Caracas' })} (VET)
+        Panel de Administración — Boda R&G
       </p>
     </div>
   )
