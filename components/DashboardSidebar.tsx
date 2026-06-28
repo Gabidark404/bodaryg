@@ -14,7 +14,7 @@ export function DashboardSidebar({ children }: { children: React.ReactNode }) {
   ]
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: '#f8fafc' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100%', background: '#f8fafc', overflowX: 'hidden' }}>
       {/* Mobile Topbar */}
       <div style={{
         display: 'flex',
@@ -158,7 +158,7 @@ export function DashboardSidebar({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Main Content Area */}
-      <div className="main-content" style={{ flex: 1 }}>
+      <div className="main-content" style={{ flex: 1, minWidth: 0 }}>
         <div className="main-content-inner" style={{
           maxWidth: 1100,
           margin: '0 auto',
